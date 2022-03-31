@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "type": "module",
+  "version": "0.0.0",
+  "main": "app.js",
+  "author": "krymzin",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.1",
+    "socket.io": "^4.4.1"
+  }
+}
