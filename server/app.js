@@ -12,8 +12,8 @@ app.get("/", (req, res) => {
   res.send({response: "Ello, do not crash server please kthxbye"}).status(200);
 });
 
-// I know redis exsts but too lazy to learn
-process.clients = {}; // {"uid": {roomcode: null|"abcd", nick: null|"abcd"}}
-process.rooms = {}; // {"abcd": {users: {"uid1": {connected: true}, "uid2": {connected: false}}, messages: ["firstmsg", "secondmsg"]}}
+// I know redis exists but too lazy to learn
+process.clients = new Map();
+process.rooms = new Map();
 
 server.listen(PORT, () => console.log(`Socket listening on port ${PORT}`));
