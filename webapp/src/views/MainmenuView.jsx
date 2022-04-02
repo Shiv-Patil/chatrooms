@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {SocketContext} from "../socket";
 import "../style/MainmenuView.css";
 import {useState} from "react";
@@ -10,12 +10,34 @@ const MainmenuView = () => {
   let hasPass = true;
   let [activebtn, setActivebtn] = useState("join");
 
+  useEffect(() => {
+    const [nickname, room, roompass] = [
+      localStorage.getItem("nickname"),
+      localStorage.getItem("room"),
+      localStorage.getItem("roompass") || "",
+    ];
+    if (nickname) document.getElementById("nickname").value = nickname;
+    if (room)
+      socket.emit("room:check", room, roompass, exists => {
+        if (exists) {
+          document.getElementById("room").value = room;
+          document.getElementById("roompass").value = roompass;
+        } else {
+          localStorage.removeItem("room");
+        }
+      });
+  }, []);
+
   const createRoom = () => {
     const nickname = document.getElementById("nickname").value;
     socket.emit("room:create", hasPass, nickname, res => {
       if (res.status === "error") {
         toast.error(res.message);
       } else {
+        const {nickname, room, password} = res;
+        localStorage.setItem("nickname", nickname);
+        localStorage.setItem("room", room);
+        localStorage.setItem("roompass", password);
         toast.success("Success");
       }
     });
@@ -36,7 +58,6 @@ const MainmenuView = () => {
     <div className="viewport">
       <span className="title">Chat Rooms</span>
       <div className="content">
-
         <TextInputGlass inputid="nickname" label="Nickname" />
 
         <div className="button-container">
@@ -60,7 +81,6 @@ const MainmenuView = () => {
             </FlexCardGlass>
           </FlexCardGlass>
         </div>
-
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import {Server} from "socket.io";
 import {checkUid, checkDuplicate} from "./middleware/middleware.js";
-import {disconnectHandler, createRoomHandler, joinRoomHandler} from "./socketevents/socketevents.js";
+import {disconnectHandler, oldRoomHandler, createRoomHandler, joinRoomHandler} from "./socketevents/socketevents.js";
 import {roomEventHandler} from "./ioevents/ioevents.js";
 
 export default server => {
@@ -25,6 +25,7 @@ export default server => {
 
     // socket event handlers (per socket)
     disconnectHandler(io, socket);
+    oldRoomHandler(io, socket);
     createRoomHandler(io, socket);
     joinRoomHandler(io, socket);
   });

@@ -11,7 +11,7 @@ const roomJoin = (io, socket, room, password, nickname, callback) => {
 
   if (process.rooms.get(room).password !== password) return callback({status: "error", message: "Invalid password"});
   socket.join(room);
-  return callback({status: "ok", room, password});
+  return callback({status: "ok", nickname, room, password});
 };
 
 const joinRoomHandler = (io, socket) => {
