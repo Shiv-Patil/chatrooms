@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./style/index.css";
 import MainmenuView from "./views/MainmenuView";
 import ChatroomView from "./views/ChatroomView";
-import App from "./App";
+import App from "./views/App";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 ReactDOM.render(
