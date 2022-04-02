@@ -1,8 +1,35 @@
+import {useContext, useRef} from "react";
+import {SocketContext} from "../socket";
 import "../style/MainmenuView.css";
 import {useState} from "react";
+import {toast} from "react-toastify";
 
 const MainmenuView = () => {
+  const socket = useContext(SocketContext);
+  let hasPass = true;
   let [activebtn, setActivebtn] = useState("join");
+
+  const createRoom = () => {
+    const nickname = document.getElementById("nickname").value;
+    socket.emit("room:create", hasPass, nickname, res => {
+      if (res.status === "error") {
+        toast.error(res.message);
+      } else {
+        toast.success("Success");
+      }
+    });
+  };
+
+  const joinRoom = () => {
+    const room = document.getElementById("room").value;
+    const password = document.getElementById("roompass").value;
+    const nickname = document.getElementById("nickname").value;
+    socket.emit("room:join", room, password, nickname, res => {
+      if (res.status === "error") {
+        toast.error(res.message);
+      }
+    });
+  };
 
   return (
     <div className="viewport">
@@ -22,13 +49,14 @@ const MainmenuView = () => {
         <div className={activebtn === "create" ? "slidingmenu-container movetoleft" : "slidingmenu-container"}>
           <FlexCardGlass className="optionmenu">
             <TextInputGlass inputid="room" label="Roomcode" />
-            <FlexCardGlass className="roombutton" style={{margin: "6px"}}>
+            <TextInputGlass inputid="roompass" label="Password (leave empty if none)" />
+            <FlexCardGlass className="roombutton" onClick={joinRoom} style={{margin: "6px"}}>
               Join this room
             </FlexCardGlass>
           </FlexCardGlass>
           <FlexCardGlass className="optionmenu">
-            <SliderCheckBox id="haspass" label="Password" />
-            <FlexCardGlass className="roombutton" style={{margin: "6px"}}>
+            <SliderCheckBox label="Password" toggleCallback={val => (hasPass = val)} />
+            <FlexCardGlass className="roombutton" onClick={createRoom} style={{margin: "6px"}}>
               Create new room
             </FlexCardGlass>
           </FlexCardGlass>
@@ -58,11 +86,16 @@ const TextInputGlass = props => {
 };
 
 const SliderCheckBox = props => {
-  let [roomhaspass, setRoomHasPass] = useState(true);
+  let [isActive, setIsActive] = useState(true);
   return (
     <div className="checkboxcontainer">
       <span>{props.label}</span>
-      <div className={roomhaspass ? "slidercontainer" : "slidercontainer inactive"} onClick={() => setRoomHasPass(!roomhaspass)}>
+      <div
+        className={isActive ? "slidercontainer" : "slidercontainer inactive"}
+        onClick={() => {
+          props.toggleCallback ? props.toggleCallback(!isActive) : 0;
+          setIsActive(!isActive);
+        }}>
         <div className="slider" />
         <div className="handle"></div>
       </div>

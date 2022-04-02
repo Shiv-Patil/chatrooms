@@ -5,8 +5,8 @@ import {roomJoin} from "./joinroomhandler.js";
 const roomCreate = (io, socket, haspassword, nickname, callback) => {
   if (!verifyNick(nickname)) return callback({status: "error", message: "Invalid nickname"});
 
-  const room = genRandom(4, rooms);
-  if (password instanceof Error) {
+  const room = genRandom(4, io.sockets.adapter.rooms);
+  if (room instanceof Error) {
     return callback({status: "error", message: "Error while generating room"});
   }
 

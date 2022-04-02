@@ -1,7 +1,6 @@
 export default sid => {
-  for (const uid of process.clients) {
-    const currSid = process.clients.get(uid).sid;
-    if (currSid === sid) {
+  for (const [uid, value] of process.clients.entries()) {
+    if (value.sid === sid) {
       return uid;
     }
   }

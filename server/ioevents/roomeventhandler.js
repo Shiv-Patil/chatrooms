@@ -7,7 +7,7 @@ const roomEventHandler = io => {
 
   io.of("/").adapter.on("join-room", (room, sid) => {
     const uid = uidFromSid(sid);
-    if (!uid || !process.client.has(uid)) return;
+    if (!uid || !process.clients.has(uid)) return;
     const client = process.clients.get(uid);
     io.to(room).emit("room:newclient", client.nick);
   });

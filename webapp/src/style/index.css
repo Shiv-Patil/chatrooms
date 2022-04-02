@@ -23,3 +23,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+:root {
+  --toastify-color-light: rgba(255, 255, 255, 0.3) !important;
+  --toastify-toast-width: 280px !important;
+}
