@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
   res.send({response: "Ello, do not crash server please kthxbye"}).status(200);
 });
 
-// I know redis exists but too lazy to learn
+// Small-scale project, don't know redis, no time to learn right now :p
 process.clients = new Map();
 process.rooms = new Map();
 

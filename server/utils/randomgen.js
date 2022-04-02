@@ -3,5 +3,5 @@ export default (length, exclude, tries = 5) => {
     const gen = (Math.random() + 1.01).toString(18).substring(2, Math.min(2 + length, 12));
     if (!exclude || !exclude.has(gen)) return gen;
   }
-  return new Error("Cannot generate random string");
+  return new Error("Cannot generate random string"); // Will probably never happen, but just in case
 };

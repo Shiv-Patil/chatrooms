@@ -31,7 +31,7 @@ export default server => {
   });
 
   io.on("connect-error", reason => {
-    console.log(reason);
+    console.error(reason);
   });
 
   return io;

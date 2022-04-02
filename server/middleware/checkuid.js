@@ -5,7 +5,7 @@ export default io => {
       return next(new Error("Invalid UID"));
     }
     const filteredUid = uid.replace(/[^\x21-\x7F]/g, "");
-    if (filteredUid.length >= 16 && filteredUid.length <= 100) {
+    if (filteredUid.length >= 16 && filteredUid.length <= 100) { // Just to be extra sure, probably not necessary
       socket.userid = filteredUid;
       next();
     } else {

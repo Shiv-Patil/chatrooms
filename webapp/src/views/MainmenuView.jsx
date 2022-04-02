@@ -12,6 +12,7 @@ const MainmenuView = () => {
 
   useEffect(() => {
     const [nickname, room, roompass] = [
+      // Last used nickname, room
       localStorage.getItem("nickname"),
       localStorage.getItem("room"),
       localStorage.getItem("roompass") || "",
@@ -19,39 +20,37 @@ const MainmenuView = () => {
     if (nickname) document.getElementById("nickname").value = nickname;
     if (room)
       socket.emit("room:check", room, roompass, exists => {
+        // Check if room still exists in the server
         if (exists) {
           document.getElementById("room").value = room;
-          document.getElementById("roompass").value = roompass;
+          document.getElementById("roompass").value = roompass; // Autofill if it exists, remove from storage if it doesn't
         } else {
           localStorage.removeItem("room");
         }
       });
   }, []);
 
+  const roomJoinedCallback = res => {
+    if (res.status === "error") {
+      toast.error(res.message);
+    } else {
+      localStorage.setItem("nickname", res.nickname);
+      localStorage.setItem("room", res.room);
+      localStorage.setItem("roompass", res.password);
+      toast.success("Success");
+    }
+  };
+
   const createRoom = () => {
     const nickname = document.getElementById("nickname").value;
-    socket.emit("room:create", hasPass, nickname, res => {
-      if (res.status === "error") {
-        toast.error(res.message);
-      } else {
-        const {nickname, room, password} = res;
-        localStorage.setItem("nickname", nickname);
-        localStorage.setItem("room", room);
-        localStorage.setItem("roompass", password);
-        toast.success("Success");
-      }
-    });
+    socket.emit("room:create", hasPass, nickname, roomJoinedCallback);
   };
 
   const joinRoom = () => {
     const room = document.getElementById("room").value;
     const password = document.getElementById("roompass").value;
     const nickname = document.getElementById("nickname").value;
-    socket.emit("room:join", room, password, nickname, res => {
-      if (res.status === "error") {
-        toast.error(res.message);
-      }
-    });
+    socket.emit("room:join", room, password, nickname, roomJoinedCallback);
   };
 
   return (
