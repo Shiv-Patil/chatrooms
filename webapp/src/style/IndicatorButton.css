@@ -1,0 +1,27 @@
+.button {
+    padding: 6px;
+    cursor: pointer;
+    transition: transform .1s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.button:hover {
+    transform: scale(105%);
+}
+
+.indicator {
+    margin-top: 4px;
+    width: 20px;
+    height: 3px;
+    overflow: hidden;
+    align-self: center;
+    box-shadow: 0 0 2px 0 #8b80f9;
+    background-color: #8b80f9aa;
+    border-radius: 2px;
+    transition: width .1s ease;
+}
+
+.indicator.hidden {
+    width: 0 !important;
+}
