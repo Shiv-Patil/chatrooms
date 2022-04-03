@@ -1,0 +1,25 @@
+.viewport {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.title {
+    font-size: 3em;
+    font-family: "Amatic SC", "Inter", sans-serif;
+    margin-bottom: 12px;
+}
+
+.button {
+    padding: 6px;
+    cursor: pointer;
+    transition: transform .1s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.button:hover {
+    transform: scale(105%);
+}

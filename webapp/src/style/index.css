@@ -4,6 +4,7 @@
     color: #242424;
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
+    scrollbar-color: #be5fddaa transparent;
 }
 
 body {
@@ -25,6 +26,22 @@ code {
 }
 
 :root {
-  --toastify-color-light: rgba(255, 255, 255, 0.3) !important;
+  --toastify-color-light: #a3c1fd !important;
   --toastify-toast-width: 280px !important;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #be5fddaa;
+  border-radius: 10px;
+}
+

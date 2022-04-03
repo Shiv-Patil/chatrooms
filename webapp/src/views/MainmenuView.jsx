@@ -4,9 +4,11 @@ import "../style/MainmenuView.css";
 import {useState} from "react";
 import {toast} from "react-toastify";
 import {FlexCardGlass, IndicatorButton, SliderCheckBox, TextInputGlass} from "../components/components";
+import {useNavigate} from "react-router-dom";
 
 const MainmenuView = () => {
   const socket = useContext(SocketContext);
+  const navigate = useNavigate();
   let hasPass = true;
   let [activebtn, setActivebtn] = useState("join");
 
@@ -37,7 +39,7 @@ const MainmenuView = () => {
       localStorage.setItem("nickname", res.nickname);
       localStorage.setItem("room", res.room);
       localStorage.setItem("roompass", res.password);
-      toast.success("Success");
+      navigate("chatroom/", {state: {nickname: res.nickname, room: res.room, roompass: res.password}});
     }
   };
 
@@ -54,12 +56,12 @@ const MainmenuView = () => {
   };
 
   return (
-    <div className="viewport">
+    <>
       <span className="title">Chat Rooms</span>
-      <div className="content">
+      <div className="mainmenu-content">
         <TextInputGlass inputid="nickname" label="Nickname" />
 
-        <div className="button-container">
+        <div className="room-option-button-container">
           <IndicatorButton label="Join room" active={activebtn === "join"} onClick={() => setActivebtn("join")} />
           <IndicatorButton label="Create room" active={activebtn === "create"} onClick={() => setActivebtn("create")} />
         </div>
@@ -81,7 +83,7 @@ const MainmenuView = () => {
           </FlexCardGlass>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -7,15 +7,17 @@ import {Slide} from "react-toastify";
 toast.configure({
   draggable: false,
   theme: "light",
-  position: "bottom-center",
-  autoClose: 2000,
+  position: "top-right",
+  autoClose: 1500,
   transition: Slide,
 });
 
 function App() {
   return (
     <SocketContext.Provider value={socket}>
-      <Outlet />
+      <div className="viewport">
+        <Outlet />
+      </div>
     </SocketContext.Provider>
   );
 }

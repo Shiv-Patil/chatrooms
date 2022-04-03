@@ -1,18 +1,4 @@
-.viewport {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.title {
-    font-size: 3em;
-    font-family: "Amatic SC", "Inter", sans-serif;
-    margin-top: 12px;
-    margin-bottom: 12px;
-}
-
-.button-container {
+.room-option-button-container {
     display: flex;
     width: 250px;
     justify-content: space-between;
@@ -20,7 +6,7 @@
     box-sizing: border-box;
 }
 
-.content {
+.mainmenu-content {
     width: 100%;
     max-width: 400px;
     display: flex;
@@ -30,7 +16,7 @@
 }
 
 .slidingmenu-container {
-    margin-top: 10px;
+    margin: 10px;
     transition: transform 0.6s ease;
     width: 250%;
     align-self: flex-start;
@@ -45,10 +31,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .optionmenu:first-child {
     margin-right: 20%;
+}
+
+.optionmenu:last-child {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .movetoleft {

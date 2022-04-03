@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 });
 
 // Small-scale project, don't know redis, no time to learn right now :p
-process.clients = new Map();
-process.rooms = new Map();
+process.clients = new Map(); // map of user ids, value is {sid: "xyz", room: "xyz", nick: "xyz"}
+process.rooms = new Map(); // map of room codes, value is {password: "xyz", messages: []}
 
 server.listen(PORT, () => console.log(`Socket listening on port ${PORT}`));
