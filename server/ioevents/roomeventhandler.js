@@ -9,8 +9,10 @@ const roomEventHandler = io => {
     const uid = uidFromSid(sid);
     if (!uid || !process.clients.has(uid)) return;
     const client = process.clients.get(uid);
-
-    io.to(room).emit("room:receivesystemmessage", {content: `${client.nickname} has joined the room`}); // tell all clients in room that someone has joined
+    io.sockets.sockets
+      .get(sid)
+      .to(room)
+      .emit("room:receivesystemmessage", {content: `${client.nickname} has joined the room`}); // tell all clients in room that someone has joined
   });
 
   io.sockets.adapter.on("leave-room", (room, sid) => {

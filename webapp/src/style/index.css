@@ -34,14 +34,11 @@ code {
   width: 5px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #be5fddaa;
   border-radius: 10px;
 }
-

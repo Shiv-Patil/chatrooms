@@ -43,7 +43,7 @@
     justify-content: center;
 }
 
-.chat-room-messages-scrollarea {
+#chat-room-messages-scrollarea {
     position: absolute;
     top: 60px;
     width: 100%;
@@ -113,7 +113,7 @@
 
 .message-content {
     margin-top: 6px;
-    white-space: pre;
+    white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;

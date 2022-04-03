@@ -32,12 +32,21 @@ socket.on("connect_error", err => {
     // User opened client in another tab (probably, I think)
     toast.error("Invalid session, already connected in a different tab", {
       autoClose: false,
-      closeButton: false,
       closeOnClick: false,
+      closeButton: false,
     });
   } else {
     // Any other reason
     console.log(err);
-    toast.error("Unable to reach server", {autoClose: false, closeButton: false, closeOnClick: false});
+    toast.error("Unable to reach server", {autoClose: false, closeOnClick: false, closeButton: false});
   }
+});
+
+socket.on("disconnect", reason => {
+  console.log(reason);
+  toast.error("Disconnected from the server. Reload to try connecting again.", {
+    autoClose: false,
+    closeOnClick: false,
+    closeButton: false,
+  });
 });

@@ -1,28 +1,45 @@
 import "../style/ChatroomView.css";
 import {FlexCardGlass, IndicatorButton} from "../components/components";
-import React, {useEffect, useState, useContext, useCallback} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import {SocketContext} from "../socket";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {ReactComponent as SendIcon} from "../assets/send.svg";
 import dayjs from "dayjs";
 
-const ChatroomView = props => {
-  const navigate = useNavigate();
+let wasScrolledDown = true;
+
+const ChatroomView = () => {
   const socket = useContext(SocketContext);
+  const navigate = useNavigate();
   let [userData, setUserData] = useState({});
   let [messages, setMessages] = useState([]);
 
   useEffect(() => {
+    if (!socket.connected || socket.disconnected) return navigate("/", {replace: true});
     setUserData({});
-    socket.emit("user:getroomdata", (room, roompass, nickname) => {
-      if (room) setUserData({room, roompass, nickname});
-      else navigate("/");
+    socket.emit("user:getroomdata", (room, roompass, nickname, messages) => {
+      if (room) {
+        setUserData({room, roompass, nickname});
+        setMessages([
+          ...messages.map((msgObj, index) => (
+            <Message
+              content={msgObj.content}
+              sender={msgObj.sender}
+              timesent={dayjs(msgObj.timesent).format("HH:mm")}
+              key={index}
+              own={socket.auth.userid === msgObj.userid}
+            />
+          )),
+          <SystemMessage content="You joined the chat" key="own" />,
+        ]);
+      } else navigate("/");
     });
 
     socket.removeAllListeners();
 
     socket.on("room:receivemessage", message => {
+      setWasScrolledDown();
       setMessages(messages => [
         ...messages,
         <Message
@@ -36,6 +53,7 @@ const ChatroomView = props => {
     });
 
     socket.on("room:receivesystemmessage", message => {
+      setWasScrolledDown();
       setMessages(messages => [...messages, <SystemMessage content={message.content} key={messages.length} />]);
     });
 
@@ -46,9 +64,11 @@ const ChatroomView = props => {
     const message = document.getElementById("message-textarea").value.trim();
     if (message.length === 0) return toast.error("Message cannot be empty");
     if (message.length > 800) return toast.error("Message should not be longer than 800 characters");
+    document.getElementById("message-textarea").disabled = true;
     socket.emit("user:sendmessage", message, res => {
       if (res.status === "error") toast.error(res.message);
       else document.getElementById("message-textarea").value = "";
+      document.getElementById("message-textarea").disabled = false;
     });
   };
 
@@ -69,6 +89,20 @@ const ChatroomView = props => {
     }
   };
 
+  const setWasScrolledDown = () => {
+    const scrollArea = document.getElementById("chat-room-messages-scrollarea");
+    wasScrolledDown = scrollArea.scrollTop === scrollArea.scrollHeight - scrollArea.clientHeight;
+  };
+
+  const scrollToBottom = () => {
+    const scrollArea = document.getElementById("chat-room-messages-scrollarea");
+    scrollArea.scrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
+  };
+
+  useEffect(() => {
+    if (wasScrolledDown) scrollToBottom();
+  }, [messages]);
+
   return (
     <>
       <ChatRoomInfoComponent
@@ -77,7 +111,7 @@ const ChatroomView = props => {
         roompass={userData.roompass}
         nickname={userData.nickname}
       />
-      <div className="chat-room-messages-scrollarea">
+      <div id="chat-room-messages-scrollarea">
         <div className="chat-room-messages-container">{messages}</div>
       </div>
       <TextArea autoFocus textareaId="message-textarea" onSendClick={sendMessage} onKeyDown={textAreaKeyDown} />

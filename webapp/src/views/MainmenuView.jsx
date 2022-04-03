@@ -36,10 +36,10 @@ const MainmenuView = () => {
     if (res.status === "error") {
       toast.error(res.message);
     } else {
+      navigate("chatroom/");
       localStorage.setItem("nickname", res.nickname);
       localStorage.setItem("room", res.room);
       localStorage.setItem("roompass", res.password);
-      navigate("chatroom/", {state: {nickname: res.nickname, room: res.room, roompass: res.password}});
     }
   };
 
@@ -82,6 +82,12 @@ const MainmenuView = () => {
             </FlexCardGlass>
           </FlexCardGlass>
         </div>
+
+        <span className="footer">
+          Made using socket.io
+          <br />
+          <a href="https://github.com/Shiv-Patil/chatrooms">Source code</a>
+        </span>
       </div>
     </>
   );

@@ -1,9 +1,6 @@
 import "../style/App.css";
 import {Outlet} from "react-router-dom";
-import {SocketContext, socket} from "../socket.js";
 import {toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import {Slide} from "react-toastify";
 toast.configure({
   draggable: false,
   theme: "light",
@@ -11,6 +8,9 @@ toast.configure({
   autoClose: 1500,
   transition: Slide,
 });
+import "react-toastify/dist/ReactToastify.css";
+import {Slide} from "react-toastify";
+import {SocketContext, socket} from "../socket.js";
 
 function App() {
   return (

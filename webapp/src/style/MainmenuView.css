@@ -46,3 +46,9 @@
 .movetoleft {
     transform: translateX(-60%);
 }
+
+.footer {
+    margin-top: 6px;
+    color: #343434;
+    font-weight: 300;
+}

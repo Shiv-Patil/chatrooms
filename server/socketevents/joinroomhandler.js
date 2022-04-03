@@ -13,8 +13,8 @@ const roomJoin = (io, socket, room, password, nickname, callback) => {
   const client = process.clients.get(socket.userid);
   client.room = room;
   client.nickname = nickname;
-  callback({status: "ok", nickname, room, password});
   socket.join(room);
+  callback({status: "ok", nickname, room, password});
 };
 
 const joinRoomHandler = (io, socket) => {
