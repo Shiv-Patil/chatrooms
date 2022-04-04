@@ -2,7 +2,7 @@ import {createContext} from "react";
 import io from "socket.io-client";
 import {v4 as uuidv4} from "uuid";
 import {toast} from "react-toastify";
-const ENDPOINT = "127.0.0.1:4000";
+const ENDPOINT = import.meta.env.VITE_ENDPOINT || "127.0.0.1:4000";
 
 const getUserId = () => {
   // Saves a random v4 uuid in localstorage to identify client in a specific browse
