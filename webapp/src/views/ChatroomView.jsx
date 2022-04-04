@@ -1,6 +1,6 @@
 import "../style/ChatroomView.css";
 import {FlexCardGlass, IndicatorButton} from "../components/components";
-import React, {useEffect, useState, useContext} from "react";
+import React, {useEffect, useState, useContext, useRef} from "react";
 import {SocketContext} from "../socket";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
@@ -8,6 +8,7 @@ import {ReactComponent as SendIcon} from "../assets/send.svg";
 import dayjs from "dayjs";
 
 let wasScrolledDown = true;
+let canSendMessage = true;
 
 const ChatroomView = () => {
   const socket = useContext(SocketContext);
@@ -39,7 +40,6 @@ const ChatroomView = () => {
     socket.removeAllListeners();
 
     socket.on("room:receivemessage", message => {
-      setWasScrolledDown();
       setMessages(messages => [
         ...messages,
         <Message
@@ -53,22 +53,32 @@ const ChatroomView = () => {
     });
 
     socket.on("room:receivesystemmessage", message => {
-      setWasScrolledDown();
       setMessages(messages => [...messages, <SystemMessage content={message.content} key={messages.length} />]);
     });
 
-    return () => socket.removeAllListeners();
+    const windowResized = e => {
+      if (wasScrolledDown) scrollToBottom();
+    };
+
+    window.removeEventListener("resize", windowResized);
+    window.addEventListener("resize", windowResized);
+
+    return () => {
+      socket.removeAllListeners();
+      window.removeEventListener("resize", windowResized);
+    };
   }, []);
 
   const sendMessage = () => {
+    if (!canSendMessage) return;
     const message = document.getElementById("message-textarea").value.trim();
-    if (message.length === 0) return toast.error("Message cannot be empty");
+    if (message.length === 0) return;
     if (message.length > 800) return toast.error("Message should not be longer than 800 characters");
-    document.getElementById("message-textarea").disabled = true;
+    canSendMessage = false;
     socket.emit("user:sendmessage", message, res => {
       if (res.status === "error") toast.error(res.message);
       else document.getElementById("message-textarea").value = "";
-      document.getElementById("message-textarea").disabled = false;
+      canSendMessage = true;
     });
   };
 
@@ -89,9 +99,8 @@ const ChatroomView = () => {
     }
   };
 
-  const setWasScrolledDown = () => {
-    const scrollArea = document.getElementById("chat-room-messages-scrollarea");
-    wasScrolledDown = scrollArea.scrollTop === scrollArea.scrollHeight - scrollArea.clientHeight;
+  const chatScrolled = e => {
+    wasScrolledDown = e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop <= 20;
   };
 
   const scrollToBottom = () => {
@@ -111,16 +120,49 @@ const ChatroomView = () => {
         roompass={userData.roompass}
         nickname={userData.nickname}
       />
-      <div id="chat-room-messages-scrollarea">
+      <div id="chat-room-messages-scrollarea" onScroll={chatScrolled}>
         <div className="chat-room-messages-container">{messages}</div>
       </div>
-      <TextArea autoFocus textareaId="message-textarea" onSendClick={sendMessage} onKeyDown={textAreaKeyDown} />
+      <TextArea
+        autoFocus
+        textareaId="message-textarea"
+        onSendClick={sendMessage}
+        onKeyDown={textAreaKeyDown}
+        onFocus={() => {
+          if (wasScrolledDown) scrollToBottom();
+        }}
+      />
     </>
   );
 };
 
 const ChatRoomInfoComponent = props => {
   let [showRoomInfo, setShowRoomInfo] = useState(props.showRoomInfo || false);
+  const containerRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  const useOutsideAlerter = (cRef, bRef) => {
+    useEffect(() => {
+      function handleClickOutside(event) {
+        if (
+          showRoomInfo &&
+          cRef.current &&
+          bRef.current &&
+          !cRef.current.contains(event.target) &&
+          !bRef.current.contains(event.target)
+        ) {
+          setShowRoomInfo(false);
+        }
+      }
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [cRef, showRoomInfo]);
+  };
+
+  useOutsideAlerter(containerRef, buttonRef);
 
   const copyInfo = () => {
     if (props.room) {
@@ -136,9 +178,14 @@ ${props.roompass ? "Room Password: " + props.roompass + "\n" : ""}My nickname: $
 
   return (
     <>
-      <IndicatorButton label="Room Info" active={showRoomInfo} onClick={() => setShowRoomInfo(!showRoomInfo)} />
+      <IndicatorButton
+        label="Room Info"
+        active={showRoomInfo}
+        onClick={() => setShowRoomInfo(showRoomInfo => !showRoomInfo)}
+        passRef={buttonRef}
+      />
       <div className="chat-room-info-container">
-        <FlexCardGlass className={showRoomInfo ? "chat-room-info" : "chat-room-info collapsed"}>
+        <FlexCardGlass passRef={containerRef} className={showRoomInfo ? "chat-room-info" : "chat-room-info collapsed"}>
           <span className="chat-room-info-item">
             Room code <br />
             <span>{props.room}</span>
@@ -195,8 +242,16 @@ const TextArea = props => {
         onKeyDown={props.onKeyDown}
         placeholder="Type here..."
         className="chat-room-text-area-textfield"
+        onFocus={props.onFocus}
+        onBlur={props.onBlur}
       />
-      <FlexCardGlass className="chat-room-text-area-sendicon-container" onClick={props.onSendClick}>
+      <FlexCardGlass
+        className="chat-room-text-area-sendicon-container"
+        onClick={props.onSendClick}
+        onMouseDown={e => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}>
         <SendIcon className="chat-room-text-area-sendicon" fill="#be5fddcc" />
       </FlexCardGlass>
     </div>

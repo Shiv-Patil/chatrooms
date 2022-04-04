@@ -82,7 +82,6 @@
     margin-right: 50px;
     margin-bottom: 10px;
     min-width: 156px;
-    overflow: hidden;
 }
 
 .message:last-child {
@@ -109,6 +108,7 @@
 .message-timesent, .message-sender {
     font-size: .9em;
     font-weight: 300;
+    overflow: hidden;
 }
 
 .message-content {
@@ -120,6 +120,7 @@
     hyphens: auto;
     user-select: text;
     text-align: left;
+    overflow: hidden;
 }
 
 .chat-room-text-area {
