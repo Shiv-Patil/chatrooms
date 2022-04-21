@@ -82,6 +82,7 @@
     margin-right: 50px;
     margin-bottom: 10px;
     min-width: 156px;
+    user-select: text;
 }
 
 .message:last-child {
@@ -118,7 +119,6 @@
     word-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-    user-select: text;
     text-align: left;
     overflow: hidden;
 }

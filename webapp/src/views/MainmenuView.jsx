@@ -68,8 +68,8 @@ const MainmenuView = () => {
 
         <div className={activebtn === "create" ? "slidingmenu-container movetoleft" : "slidingmenu-container"}>
           <FlexCardGlass className="optionmenu">
-            <TextInputGlass inputid="room" label="Roomcode" />
-            <TextInputGlass inputid="roompass" label="Password (leave empty if none)" />
+            <TextInputGlass inputid="room" label="Roomcode" maxLength="4" />
+            <TextInputGlass inputid="roompass" label="Password (leave empty if none)" maxLength="6" />
             <FlexCardGlass className="button" onClick={joinRoom} style={{margin: "6px"}}>
               Join this room
             </FlexCardGlass>
@@ -83,7 +83,7 @@ const MainmenuView = () => {
           </FlexCardGlass>
         </div>
 
-        <span className="footer">
+        <span className="mainmenu-footer">
           Made using socket.io
           <br />
           <a href="https://github.com/Shiv-Patil/chatrooms">Source code</a>

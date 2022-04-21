@@ -8,6 +8,7 @@
     font-weight: lighter;
     font-size: small;
     margin-bottom: 2px;
+    user-select: none;
 }
 
 .text-input {

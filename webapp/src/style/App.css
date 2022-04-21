@@ -10,6 +10,7 @@
     font-size: 3em;
     font-family: "Amatic SC", "Inter", sans-serif;
     margin-bottom: 12px;
+    user-select: none;
 }
 
 .button {
@@ -18,6 +19,7 @@
     transition: transform .1s ease;
     display: flex;
     flex-direction: column;
+    user-select: none;
 }
 
 .button:hover {

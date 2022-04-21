@@ -5,6 +5,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
         "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     scrollbar-color: #be5fddaa transparent;
+    caret-color: transparent;
 }
 
 body {
